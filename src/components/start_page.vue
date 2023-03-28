@@ -5,7 +5,7 @@
 
       <v-col cols="12" class="text-center mt-5">
         <h1 class="display-1 my-1">시작화면 페이지</h1>
-        <p class="body-1">로그인 없이 방문자 누구나 접속 가능한 페이지입니
+        <p class="body-1">로그인 없이 방문자 누구나 접속 가능한 페이지입니 
           다.</p>
         <!-- 시간지연의 경우 회전 프로그레스 원 표시 -->
         <v-progress-circular v-if="fnGetLoading" indeterminate :width="7" :size="70" color="grey lighten-1">
@@ -35,12 +35,22 @@
 </template>
 
 <script>
-  console.log("현재 페이지 :  start-page");
+
   export default {
     name: 'start-page',
+    data: () => ({
+   
+   }),
     methods:{
       fnDoGoogleLogin_Popup(){
-        alert("스토어에 구글 계정 로그인 처리 요청")
+        //스토어에 구글 계정 로그인 처리 요청
+        this.$store.dispatch("fnDoGoogleLogin_Popup");
+      }
+    },
+    computed:{
+      //시간 지연 상태 스토어에서 읽어서 반환
+      fnGetLoading(){
+        return this.$store.getters.fnGetLoading;
       }
     }
   }

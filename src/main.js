@@ -26,8 +26,10 @@ new Vue({
     
     onAuthStateChanged(auth, (pUserInfo) => {
       if (pUserInfo !== null) {
-        const uid = user.uid;
-        console.log("uid : ", uid);
+      
+        console.log("pUserInfo : ", pUserInfo);
+        console.log("pUserInfo : ", pUserInfo.uid);
+        const uid = pUserInfo.uid;
         // 이미 로그인 되어있었는지 등의 상태를 파악하여 처리함
         store.dispatch('fnDoLoginAuto', pUserInfo);
       }else{

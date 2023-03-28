@@ -1,5 +1,7 @@
 // 파이어베이스 앱 객체 모듈 가져오기
 import firebase from 'firebase/compat/app'
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+
 // 파이어베이스 패키지 모듈 가져오기
 import 'firebase/compat/auth'
 import router from '@/router'
@@ -83,9 +85,20 @@ export default {
       var oProvider = new firebase.auth.GoogleAuthProvider();
       // 오픈 계정의 범위를 설정합니다. 
       // https://developers.google.com/identity/protocols/googlescopes
+
+      console.log(" oProvider  : ",oProvider);
+
       oProvider.addScope('profile');
       oProvider.addScope('email');
-      firebase.auth().signInWithPopup(oProvider)
+
+
+      //firebase.auth().signInWithPopup(oProvider)
+      //문서
+      //https://firebase.google.com/docs/auth/web/google-signin?hl=ko#web-version-9_4
+      const auth = getAuth();
+      
+
+       signInWithPopup(auth, oProvider)
         .then(pUserInfo => {
           // 로그인이 성공하면 스토어에 계정정보 저장
           commit('fnSetUser', {
@@ -94,6 +107,10 @@ export default {
             email: pUserInfo.user.email,       // <-- 파이어베이스 v9 마이그레이션 : user 추가
             photoURL: pUserInfo.user.photoURL  // <-- 파이어베이스 v9 마이그레이션 : user 추가
           })
+
+          console.log("로그인이 성공  pUserInfo  : ",pUserInfo);
+
+
           commit('fnSetLoading', false) // 시간걸림 상태 해제
           commit('fnSetErrorMessage', '') // 에러메세지 초기화
           router.push('/main') // 로그인 후 화면으로 이동
