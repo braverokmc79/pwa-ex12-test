@@ -55,8 +55,8 @@ router.beforeEach((to, from, next)=>{
   const auth = getAuth();
   const bCheckAuth= auth.currentUser;
 
-  console.log("  bNeedAuth  값이 true 이면 로그인이 필요한 페이지로 이동:" ,bNeedAuth);
-  console.log("  !bCheckAuth 널값이면 true :" ,!bCheckAuth);
+ // console.log("  bNeedAuth  값이 true 이면 로그인이 필요한 페이지로 이동:" ,bNeedAuth);
+  //console.log("  !bCheckAuth 널값이면 true :" ,!bCheckAuth);
   if (bNeedAuth && !bCheckAuth) {
     next('/login')
   } else {

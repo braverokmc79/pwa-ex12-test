@@ -23,7 +23,6 @@ new Vue({
   created() {
 
     const auth = getAuth();
-    
     onAuthStateChanged(auth, (pUserInfo) => {
       if (pUserInfo !== null) {
       
@@ -34,6 +33,7 @@ new Vue({
         store.dispatch('fnDoLoginAuto', pUserInfo);
       }else{
         console.log("로그인 안됨");
+       
       }
     });
 

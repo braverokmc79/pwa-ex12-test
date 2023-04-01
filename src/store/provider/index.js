@@ -1,6 +1,6 @@
 // 파이어베이스 앱 객체 모듈 가져오기
 import firebase from 'firebase/compat/app'
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { getAuth, signInWithPopup, GoogleAuthProvider ,signInWithEmailAndPassword ,createUserWithEmailAndPassword } from "firebase/auth";
 
 // 파이어베이스 패키지 모듈 가져오기
 import 'firebase/compat/auth'
@@ -33,21 +33,30 @@ export default {
     }, payload) {
       commit('fnSetLoading', true) // 스토어에 시간걸림으로 상태 변경
       // 파이어베이스에 이메일 회원 생성 및 저장
-      firebase.auth().createUserWithEmailAndPassword(payload.pEmail,
-          payload.pPassword)
-        .then(pUserInfo => {
-          // 신규 회원 이메일 정보를 스토어에 저장
-          commit('fnSetUser', {
-            email: pUserInfo.user.email  // <-- 파이어베이스 v9 마이그레이션 : user 추가
-          })
+      console.log("1. 파이어베이스에 이메일 회원 생성 및 저장  " ,payload.pEmail, payload.pPassword);
+      const auth = getAuth();
+
+        createUserWithEmailAndPassword(auth, payload.pEmail, payload.pPassword)
+        .then((userCredential) => {
+        
+          const user = userCredential.user;
+          console.log("회원 가입 성공 : ", user);
+          commit('fnSetUser', { email: user.email})// <-- 파이어베이스 v9 마이그레이션 : user 추가
           commit('fnSetLoading', false) // 스토어에 시간완료 상태 변경
           commit('fnSetErrorMessage', '') // 스토어 에러메시지 초기화
+          alert("회원 가입을 축하 합니다.");
+
           router.push('/main') // 로그인 후 첫 화면으로 이동
+      
         })
-        .catch(err => {
-          commit('fnSetErrorMessage', err.message)
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log("errorCode " ,errorCode , errorMessage);
+          commit('fnSetErrorMessage', errorMessage)
           commit('fnSetLoading', false)
-        })
+        });
+
     },
     
     // 이메일 회원 로그인
@@ -56,7 +65,10 @@ export default {
     }, payload) {
       commit('fnSetLoading', true) // 스토어에 시간걸림으로 상태 변경
       // 파이어베이스에 이메일 회원 로그인 인증 처리 요청
-      firebase.auth().signInWithEmailAndPassword(payload.pEmail,
+      //firebase.auth().
+      console.log(" 2 .파이어베이스에 이메일 회원 로그인 인증 처리 요청  ");
+      const auth = getAuth();
+      signInWithEmailAndPassword(auth, payload.pEmail,
           payload.pPassword)
         .then(pUserInfo => {
           // 로그인이 성공하면 스토어에 계정정보 저장
@@ -90,7 +102,6 @@ export default {
 
       oProvider.addScope('profile');
       oProvider.addScope('email');
-
 
       //firebase.auth().signInWithPopup(oProvider)
       //문서
@@ -135,13 +146,13 @@ export default {
       commit('fnSetErrorMessage', '') // 에러메세지 초기화  
     },
     // 로그아웃 처리
-    fnDoLogout({
-      commit
-    }) {
+    fnDoLogout({commit} ) {
       // 파이어베이스에 로그아웃 요청
-      firebase.auth().signOut()
+      console.log("로그 아웃 요쳥");
+      const auth = getAuth();
+      auth.signOut()
       commit('fnSetUser', null) // 스토어에 계정정보 초기화
-      router.push('/') // 첫 화면으로 이동
+       router.push('/') // 첫 화면으로 이동
     }
   }
 }

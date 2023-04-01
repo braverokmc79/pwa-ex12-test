@@ -42,6 +42,12 @@
             로그아웃
         </v-btn>
 
+        <!-- 로그인 페이지 -->
+         <v-btn  depressed  color="primary"  class="ma-2" @click="fonLoginPage" v-if="!fnGetAuthStatus">
+            <v-icon left>mdi-arrow-right-bold-box-login</v-icon>
+            로그인
+        </v-btn>
+
     </v-app-bar>
 
     <!-- 왼쪽 토글 메뉴 -->
@@ -59,7 +65,7 @@
           active-class="deep-purple--text text--accent-4"
         >
       
-
+       
           <v-list-item class="mt-5"  v-for="(item, i) in fnGetMenuItems" :to="item.to" :key="i">
             <v-icon left v-html="item.icon"></v-icon>
              {{item.title}}
@@ -110,6 +116,7 @@ export default {
 
       // 스토어에서 현재 인증 상태인지 반환
        fnGetAuthStatus() {
+        console.log("스토어에서 현재 인증 상태인지 반환 : ",this.$store.getters.fnGetAuthStatus);
         return this.$store.getters.fnGetAuthStatus
       },
 
@@ -119,7 +126,7 @@ export default {
             return [{
               title: '회원가입',
               to: '/register',
-              icon: 'mdi-lock-open-outline'
+              icon: 'mdi-lock-open-outline',
             }]
           } else {
             return [{
@@ -136,7 +143,15 @@ export default {
     methods: {
       fnDoLogout() {
         this.$store.dispatch('fnDoLogout')
-      }
+      },
+        // 스토어에 이메일 로그인 처리 요청
+      fonLoginPage() {
+        console.log("로그인페이지 이동1")
+     
+        this.$router.push("/login");
+      },
+
+    
     },
 };
 </script>
